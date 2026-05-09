@@ -1,5 +1,14 @@
-import { DynamicModule, Global, Module } from '@nestjs/common';
+import { DynamicModule, Global, Module, OnModuleInit } from '@nestjs/common';
 import Twilio from 'twilio';
+import { CAPABILITY, PROVIDER } from '../../core/capabilities';
+import { ProviderRegistryService } from '../../core/provider-registry.service';
+import { TwilioConversationsProvider } from './providers/twilio-conversations.provider';
+import { TwilioLookupProvider } from './providers/twilio-lookup.provider';
+import { TwilioMessagingServicesProvider } from './providers/twilio-messaging-services.provider';
+import { TwilioNumbersProvider } from './providers/twilio-numbers.provider';
+import { TwilioSmsProvider } from './providers/twilio-sms.provider';
+import { TwilioVerifyProvider } from './providers/twilio-verify.provider';
+import { TwilioVoiceProvider } from './providers/twilio-voice.provider';
 import { A2pController } from './controllers/a2p.controller';
 import { ConversationsController } from './controllers/conversations.controller';
 import { CredentialsController } from './controllers/credentials.controller';
@@ -62,7 +71,41 @@ export interface TwilioModuleOptions {
 
 @Global()
 @Module({})
-export class TwilioModule {
+export class TwilioModule implements OnModuleInit {
+  constructor(
+    private readonly registry: ProviderRegistryService,
+    private readonly smsProvider: TwilioSmsProvider,
+    private readonly voiceProvider: TwilioVoiceProvider,
+    private readonly verifyProvider: TwilioVerifyProvider,
+    private readonly lookupProvider: TwilioLookupProvider,
+    private readonly numbersProvider: TwilioNumbersProvider,
+    private readonly messagingServicesProvider: TwilioMessagingServicesProvider,
+    private readonly conversationsProvider: TwilioConversationsProvider,
+  ) {}
+
+  /**
+   * Register Twilio implementations with the provider registry. Capability
+   * controllers in `src/core/` resolve the active provider from env at
+   * request time; this just makes Twilio *available* under the registry.
+   */
+  onModuleInit(): void {
+    this.registry.register(CAPABILITY.SMS, PROVIDER.TWILIO, this.smsProvider);
+    this.registry.register(CAPABILITY.VOICE, PROVIDER.TWILIO, this.voiceProvider);
+    this.registry.register(CAPABILITY.VERIFY, PROVIDER.TWILIO, this.verifyProvider);
+    this.registry.register(CAPABILITY.LOOKUP, PROVIDER.TWILIO, this.lookupProvider);
+    this.registry.register(CAPABILITY.NUMBERS, PROVIDER.TWILIO, this.numbersProvider);
+    this.registry.register(
+      CAPABILITY.MESSAGING_SERVICES,
+      PROVIDER.TWILIO,
+      this.messagingServicesProvider,
+    );
+    this.registry.register(
+      CAPABILITY.CONVERSATIONS,
+      PROVIDER.TWILIO,
+      this.conversationsProvider,
+    );
+  }
+
   static forRootAsync(asyncOptions: {
     imports?: any[];
     inject?: any[];
@@ -231,6 +274,14 @@ export class TwilioModule {
           }),
           inject: ['TWILIO_MODULE_OPTIONS'],
         },
+        // Capability adapters that implement core interfaces.
+        TwilioSmsProvider,
+        TwilioVoiceProvider,
+        TwilioVerifyProvider,
+        TwilioLookupProvider,
+        TwilioNumbersProvider,
+        TwilioMessagingServicesProvider,
+        TwilioConversationsProvider,
       ],
       exports: [
         TwilioClientFactory,
@@ -256,6 +307,13 @@ export class TwilioModule {
         ProxyHelper,
         TaskRouterHelper,
         'TWILIO_CONFIG',
+        TwilioSmsProvider,
+        TwilioVoiceProvider,
+        TwilioVerifyProvider,
+        TwilioLookupProvider,
+        TwilioNumbersProvider,
+        TwilioMessagingServicesProvider,
+        TwilioConversationsProvider,
       ],
     };
   }
@@ -397,6 +455,13 @@ export class TwilioModule {
             authToken: options.webhookAuthToken || authToken,
           },
         },
+        TwilioSmsProvider,
+        TwilioVoiceProvider,
+        TwilioVerifyProvider,
+        TwilioLookupProvider,
+        TwilioNumbersProvider,
+        TwilioMessagingServicesProvider,
+        TwilioConversationsProvider,
       ],
       exports: [
         TwilioClientFactory,
@@ -422,6 +487,13 @@ export class TwilioModule {
         ProxyHelper,
         TaskRouterHelper,
         'TWILIO_CONFIG',
+        TwilioSmsProvider,
+        TwilioVoiceProvider,
+        TwilioVerifyProvider,
+        TwilioLookupProvider,
+        TwilioNumbersProvider,
+        TwilioMessagingServicesProvider,
+        TwilioConversationsProvider,
       ],
     };
   }

@@ -22,4 +22,11 @@ export * from './helpers/conversations.helper';
 export * from './helpers/studio.helper';
 export * from './helpers/proxy.helper';
 export * from './helpers/task-router.helper';
+export * from './providers/twilio-sms.provider';
+export * from './providers/twilio-voice.provider';
+export * from './providers/twilio-verify.provider';
+export * from './providers/twilio-lookup.provider';
+export * from './providers/twilio-numbers.provider';
+export * from './providers/twilio-messaging-services.provider';
+export * from './providers/twilio-conversations.provider';
 

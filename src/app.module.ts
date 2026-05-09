@@ -2,7 +2,11 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { TwilioModule, TwilioModuleOptions } from './twilio/twilio.module';
+import { CoreModule } from './core/core.module';
+import { MessageBirdModule } from './providers/messagebird/messagebird.module';
+import { PlivoModule } from './providers/plivo/plivo.module';
+import { TwilioModule, TwilioModuleOptions } from './providers/twilio/twilio.module';
+import { VonageModule } from './providers/vonage/vonage.module';
 
 @Module({
   imports: [
@@ -19,6 +23,10 @@ import { TwilioModule, TwilioModuleOptions } from './twilio/twilio.module';
         webhookAuthToken: configService.get<string>('TWILIO_WEBHOOK_AUTH_TOKEN'),
       }),
     }),
+    VonageModule,
+    PlivoModule,
+    MessageBirdModule,
+    CoreModule,
   ],
   controllers: [AppController],
   providers: [AppService],

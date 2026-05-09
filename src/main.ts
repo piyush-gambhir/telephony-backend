@@ -29,11 +29,25 @@ async function bootstrap() {
 
   // Swagger/OpenAPI setup
   const config = new DocumentBuilder()
-    .setTitle('Twilio Wrapper Backend API')
+    .setTitle('Telephony Backend API')
     .setDescription(
-      'Complete REST API wrapper for Twilio services including SMS, Voice, Numbers, Messaging Services, Verification, Lookup, Recordings, Usage, Subaccounts, Credentials, Conversations, Proxy, TaskRouter, TrustHub, A2P 10DLC, Fax, Short Codes, and Studio',
+      'Provider-agnostic telephony API. Capability routes (SMS, Voice, Verify, Lookup, Numbers, Messaging Services, Conversations) delegate to the active provider configured via PROVIDER_<CAPABILITY> env vars. Provider-specific routes (e.g. /twilio/...) remain available for surfaces that aren\'t part of the agnostic core (TaskRouter, TrustHub, A2P 10DLC, Studio, Proxy, Fax, Short Codes, Subaccounts, Credentials, Recordings, Usage, Webhooks).',
     )
     .setVersion('1.0')
+    // Provider-agnostic capability tags (delegate to active provider via registry).
+    .addTag('SMS', 'Provider-agnostic SMS (delegates to PROVIDER_SMS)')
+    .addTag('Voice', 'Provider-agnostic Voice (delegates to PROVIDER_VOICE)')
+    .addTag('Verify', 'Provider-agnostic Verify/OTP (delegates to PROVIDER_VERIFY)')
+    .addTag('Lookup', 'Provider-agnostic Lookup (delegates to PROVIDER_LOOKUP)')
+    .addTag('Numbers', 'Provider-agnostic Numbers (delegates to PROVIDER_NUMBERS)')
+    .addTag(
+      'Messaging Services',
+      'Provider-agnostic Messaging Services (delegates to PROVIDER_MESSAGING_SERVICES)',
+    )
+    .addTag(
+      'Conversations',
+      'Provider-agnostic Conversations (delegates to PROVIDER_CONVERSATIONS)',
+    )
     .addTag('Twilio - SMS', 'SMS messaging operations')
     .addTag('Twilio - Voice', 'Voice call operations')
     .addTag('Twilio - Phone Numbers', 'Phone number management')
@@ -61,6 +75,18 @@ async function bootstrap() {
   // This ensures all Twilio endpoints appear together alphabetically
   // To add another module, simply prefix its tags (e.g., "PaymentModule - Stripe")
   const moduleTagGroups = [
+    {
+      name: 'Core (Provider-agnostic)',
+      tags: [
+        'SMS',
+        'Voice',
+        'Verify',
+        'Lookup',
+        'Numbers',
+        'Messaging Services',
+        'Conversations',
+      ],
+    },
     {
       name: 'Twilio',
       tags: [
@@ -103,7 +129,7 @@ async function bootstrap() {
       docExpansion: 'none', // Don't expand operations by default
       filter: true, // Enable tag filtering
     },
-    customSiteTitle: 'Twilio Wrapper API Documentation',
+    customSiteTitle: 'Telephony Backend API Documentation',
     customCss: `
       .swagger-ui .topbar { display: none; }
       .swagger-ui .info { margin: 20px 0; }
@@ -180,7 +206,7 @@ async function bootstrap() {
     `Swagger documentation available at: http://localhost:${process.env.PORT ?? 3000}/api`,
   );
   logger.log(
-    `All Twilio API routes are grouped under: http://localhost:${process.env.PORT ?? 3000}/`,
+    `Capability routes available at /sms, /voice, /verify, /lookup, /numbers, /messaging-services, /conversations (delegate to active provider).`,
   );
 }
 bootstrap();
