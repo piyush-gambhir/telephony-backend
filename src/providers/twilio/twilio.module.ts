@@ -2,9 +2,7 @@ import { DynamicModule, Global, Module, OnModuleInit } from '@nestjs/common';
 import Twilio from 'twilio';
 import { CAPABILITY, PROVIDER } from '../../core/capabilities';
 import { ProviderRegistryService } from '../../core/provider-registry.service';
-import { TwilioConversationsProvider } from './providers/twilio-conversations.provider';
 import { TwilioLookupProvider } from './providers/twilio-lookup.provider';
-import { TwilioMessagingServicesProvider } from './providers/twilio-messaging-services.provider';
 import { TwilioNumbersProvider } from './providers/twilio-numbers.provider';
 import { TwilioSmsProvider } from './providers/twilio-sms.provider';
 import { TwilioVerifyProvider } from './providers/twilio-verify.provider';
@@ -79,8 +77,6 @@ export class TwilioModule implements OnModuleInit {
     private readonly verifyProvider: TwilioVerifyProvider,
     private readonly lookupProvider: TwilioLookupProvider,
     private readonly numbersProvider: TwilioNumbersProvider,
-    private readonly messagingServicesProvider: TwilioMessagingServicesProvider,
-    private readonly conversationsProvider: TwilioConversationsProvider,
   ) {}
 
   /**
@@ -94,16 +90,6 @@ export class TwilioModule implements OnModuleInit {
     this.registry.register(CAPABILITY.VERIFY, PROVIDER.TWILIO, this.verifyProvider);
     this.registry.register(CAPABILITY.LOOKUP, PROVIDER.TWILIO, this.lookupProvider);
     this.registry.register(CAPABILITY.NUMBERS, PROVIDER.TWILIO, this.numbersProvider);
-    this.registry.register(
-      CAPABILITY.MESSAGING_SERVICES,
-      PROVIDER.TWILIO,
-      this.messagingServicesProvider,
-    );
-    this.registry.register(
-      CAPABILITY.CONVERSATIONS,
-      PROVIDER.TWILIO,
-      this.conversationsProvider,
-    );
   }
 
   static forRootAsync(asyncOptions: {
@@ -280,8 +266,6 @@ export class TwilioModule implements OnModuleInit {
         TwilioVerifyProvider,
         TwilioLookupProvider,
         TwilioNumbersProvider,
-        TwilioMessagingServicesProvider,
-        TwilioConversationsProvider,
       ],
       exports: [
         TwilioClientFactory,
@@ -312,8 +296,6 @@ export class TwilioModule implements OnModuleInit {
         TwilioVerifyProvider,
         TwilioLookupProvider,
         TwilioNumbersProvider,
-        TwilioMessagingServicesProvider,
-        TwilioConversationsProvider,
       ],
     };
   }
@@ -460,8 +442,6 @@ export class TwilioModule implements OnModuleInit {
         TwilioVerifyProvider,
         TwilioLookupProvider,
         TwilioNumbersProvider,
-        TwilioMessagingServicesProvider,
-        TwilioConversationsProvider,
       ],
       exports: [
         TwilioClientFactory,
@@ -492,8 +472,6 @@ export class TwilioModule implements OnModuleInit {
         TwilioVerifyProvider,
         TwilioLookupProvider,
         TwilioNumbersProvider,
-        TwilioMessagingServicesProvider,
-        TwilioConversationsProvider,
       ],
     };
   }

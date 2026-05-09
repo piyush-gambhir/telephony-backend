@@ -1,16 +1,12 @@
 import { Injectable, Module, NotImplementedException, OnModuleInit } from '@nestjs/common';
 import { CAPABILITY, PROVIDER } from '../../core/capabilities';
 import {
-  ConversationsProvider,
-  CreateConversationParams,
-  CreateMessagingServiceParams,
   ListCallsParams,
   ListOwnedNumbersParams,
   ListSmsParams,
   LookupParams,
   LookupProvider,
   MakeCallParams,
-  MessagingServicesProvider,
   NumbersProvider,
   PurchaseNumberParams,
   SearchAvailableNumbersParams,
@@ -98,42 +94,12 @@ export class VonageNumbersProvider implements NumbersProvider {
   }
 }
 
-@Injectable()
-export class VonageMessagingServicesProvider implements MessagingServicesProvider {
-  list(_p?: { limit?: number }) {
-    return Promise.reject(notImpl('messaging-services.list'));
-  }
-  fetch(_sid: string) {
-    return Promise.reject(notImpl('messaging-services.fetch'));
-  }
-  create(_p: CreateMessagingServiceParams) {
-    return Promise.reject(notImpl('messaging-services.create'));
-  }
-  delete(_sid: string) {
-    return Promise.reject(notImpl('messaging-services.delete'));
-  }
-}
-
-@Injectable()
-export class VonageConversationsProvider implements ConversationsProvider {
-  list(_p?: { limit?: number }) {
-    return Promise.reject(notImpl('conversations.list'));
-  }
-  fetch(_sid: string) {
-    return Promise.reject(notImpl('conversations.fetch'));
-  }
-  create(_p: CreateConversationParams) {
-    return Promise.reject(notImpl('conversations.create'));
-  }
-  delete(_sid: string) {
-    return Promise.reject(notImpl('conversations.delete'));
-  }
-}
-
 /**
  * Placeholder Vonage provider module. Registers `NotImplementedException`-
  * throwing implementations against the registry so the wiring compiles and
- * runs end-to-end. Future contributors fill in real implementations.
+ * runs end-to-end. Future contributors fill in real implementations and add
+ * Vonage-specific controllers/surfaces under `src/providers/vonage/` if
+ * needed (e.g. Vonage Conversations, Vonage Verify Workflow).
  */
 @Module({
   providers: [
@@ -142,8 +108,6 @@ export class VonageConversationsProvider implements ConversationsProvider {
     VonageVerifyProvider,
     VonageLookupProvider,
     VonageNumbersProvider,
-    VonageMessagingServicesProvider,
-    VonageConversationsProvider,
   ],
   exports: [
     VonageSmsProvider,
@@ -151,8 +115,6 @@ export class VonageConversationsProvider implements ConversationsProvider {
     VonageVerifyProvider,
     VonageLookupProvider,
     VonageNumbersProvider,
-    VonageMessagingServicesProvider,
-    VonageConversationsProvider,
   ],
 })
 export class VonageModule implements OnModuleInit {
@@ -163,8 +125,6 @@ export class VonageModule implements OnModuleInit {
     private readonly verify: VonageVerifyProvider,
     private readonly lookup: VonageLookupProvider,
     private readonly numbers: VonageNumbersProvider,
-    private readonly messagingServices: VonageMessagingServicesProvider,
-    private readonly conversations: VonageConversationsProvider,
   ) {}
 
   onModuleInit(): void {
@@ -173,7 +133,5 @@ export class VonageModule implements OnModuleInit {
     this.registry.register(CAPABILITY.VERIFY, NAME, this.verify);
     this.registry.register(CAPABILITY.LOOKUP, NAME, this.lookup);
     this.registry.register(CAPABILITY.NUMBERS, NAME, this.numbers);
-    this.registry.register(CAPABILITY.MESSAGING_SERVICES, NAME, this.messagingServices);
-    this.registry.register(CAPABILITY.CONVERSATIONS, NAME, this.conversations);
   }
 }

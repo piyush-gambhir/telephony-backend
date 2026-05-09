@@ -1,16 +1,12 @@
 import { Injectable, Module, NotImplementedException, OnModuleInit } from '@nestjs/common';
 import { CAPABILITY, PROVIDER } from '../../core/capabilities';
 import {
-  ConversationsProvider,
-  CreateConversationParams,
-  CreateMessagingServiceParams,
   ListCallsParams,
   ListOwnedNumbersParams,
   ListSmsParams,
   LookupParams,
   LookupProvider,
   MakeCallParams,
-  MessagingServicesProvider,
   NumbersProvider,
   PurchaseNumberParams,
   SearchAvailableNumbersParams,
@@ -98,38 +94,6 @@ export class PlivoNumbersProvider implements NumbersProvider {
   }
 }
 
-@Injectable()
-export class PlivoMessagingServicesProvider implements MessagingServicesProvider {
-  list(_p?: { limit?: number }) {
-    return Promise.reject(notImpl('messaging-services.list'));
-  }
-  fetch(_sid: string) {
-    return Promise.reject(notImpl('messaging-services.fetch'));
-  }
-  create(_p: CreateMessagingServiceParams) {
-    return Promise.reject(notImpl('messaging-services.create'));
-  }
-  delete(_sid: string) {
-    return Promise.reject(notImpl('messaging-services.delete'));
-  }
-}
-
-@Injectable()
-export class PlivoConversationsProvider implements ConversationsProvider {
-  list(_p?: { limit?: number }) {
-    return Promise.reject(notImpl('conversations.list'));
-  }
-  fetch(_sid: string) {
-    return Promise.reject(notImpl('conversations.fetch'));
-  }
-  create(_p: CreateConversationParams) {
-    return Promise.reject(notImpl('conversations.create'));
-  }
-  delete(_sid: string) {
-    return Promise.reject(notImpl('conversations.delete'));
-  }
-}
-
 /**
  * Placeholder Plivo provider module. Registers `NotImplementedException`-
  * throwing implementations against the registry so the wiring compiles and
@@ -142,8 +106,6 @@ export class PlivoConversationsProvider implements ConversationsProvider {
     PlivoVerifyProvider,
     PlivoLookupProvider,
     PlivoNumbersProvider,
-    PlivoMessagingServicesProvider,
-    PlivoConversationsProvider,
   ],
   exports: [
     PlivoSmsProvider,
@@ -151,8 +113,6 @@ export class PlivoConversationsProvider implements ConversationsProvider {
     PlivoVerifyProvider,
     PlivoLookupProvider,
     PlivoNumbersProvider,
-    PlivoMessagingServicesProvider,
-    PlivoConversationsProvider,
   ],
 })
 export class PlivoModule implements OnModuleInit {
@@ -163,8 +123,6 @@ export class PlivoModule implements OnModuleInit {
     private readonly verify: PlivoVerifyProvider,
     private readonly lookup: PlivoLookupProvider,
     private readonly numbers: PlivoNumbersProvider,
-    private readonly messagingServices: PlivoMessagingServicesProvider,
-    private readonly conversations: PlivoConversationsProvider,
   ) {}
 
   onModuleInit(): void {
@@ -173,7 +131,5 @@ export class PlivoModule implements OnModuleInit {
     this.registry.register(CAPABILITY.VERIFY, NAME, this.verify);
     this.registry.register(CAPABILITY.LOOKUP, NAME, this.lookup);
     this.registry.register(CAPABILITY.NUMBERS, NAME, this.numbers);
-    this.registry.register(CAPABILITY.MESSAGING_SERVICES, NAME, this.messagingServices);
-    this.registry.register(CAPABILITY.CONVERSATIONS, NAME, this.conversations);
   }
 }

@@ -27,6 +27,4 @@ export * from './providers/twilio-voice.provider';
 export * from './providers/twilio-verify.provider';
 export * from './providers/twilio-lookup.provider';
 export * from './providers/twilio-numbers.provider';
-export * from './providers/twilio-messaging-services.provider';
-export * from './providers/twilio-conversations.provider';
 

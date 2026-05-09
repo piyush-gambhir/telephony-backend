@@ -1,8 +1,8 @@
 {
-  "name": "twilio-wrapper-backend",
+  "name": "telephony-backend",
   "version": "0.0.1",
   "private": true,
-  "description": "",
+  "description": "Provider-agnostic telephony backend (SMS, Voice, Verify, Lookup, Numbers). Twilio is the first module.",
   "license": "UNLICENSED",
   "author": "",
   "scripts": {

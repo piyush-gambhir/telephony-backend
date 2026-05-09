@@ -2,9 +2,7 @@ import { Injectable, Logger, NotImplementedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Capability, ProviderName, capabilityEnvVar } from './capabilities';
 import {
-  ConversationsProvider,
   LookupProvider,
-  MessagingServicesProvider,
   NumbersProvider,
   SmsProvider,
   VerifyProvider,
@@ -21,8 +19,6 @@ export interface CapabilityImplMap {
   VERIFY: VerifyProvider;
   LOOKUP: LookupProvider;
   NUMBERS: NumbersProvider;
-  MESSAGING_SERVICES: MessagingServicesProvider;
-  CONVERSATIONS: ConversationsProvider;
 }
 
 type Registry = {

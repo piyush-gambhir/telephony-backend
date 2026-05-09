@@ -1,8 +1,6 @@
 import { Global, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { ConversationsCoreController } from './controllers/conversations.controller';
 import { LookupCoreController } from './controllers/lookup.controller';
-import { MessagingServicesCoreController } from './controllers/messaging-services.controller';
 import { NumbersCoreController } from './controllers/numbers.controller';
 import { SmsCoreController } from './controllers/sms.controller';
 import { VerifyCoreController } from './controllers/verify.controller';
@@ -26,8 +24,6 @@ import { ProviderRegistryService } from './provider-registry.service';
     VerifyCoreController,
     LookupCoreController,
     NumbersCoreController,
-    MessagingServicesCoreController,
-    ConversationsCoreController,
   ],
   providers: [ProviderRegistryService],
   exports: [ProviderRegistryService],

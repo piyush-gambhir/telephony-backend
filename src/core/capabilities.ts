@@ -12,8 +12,6 @@ export const CAPABILITY = {
   VERIFY: 'VERIFY',
   LOOKUP: 'LOOKUP',
   NUMBERS: 'NUMBERS',
-  MESSAGING_SERVICES: 'MESSAGING_SERVICES',
-  CONVERSATIONS: 'CONVERSATIONS',
 } as const;
 
 export type Capability = (typeof CAPABILITY)[keyof typeof CAPABILITY];
